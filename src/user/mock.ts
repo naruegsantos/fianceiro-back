@@ -1,9 +1,11 @@
+import { randomUUID } from "node:crypto"
+
 interface IUser {
   id:number
   name:string
   email:string
   password:string
-  isAdmin?:boolean
+  isAdmin?:string
 }
 
 const users:IUser[] = [
@@ -18,7 +20,7 @@ const users:IUser[] = [
     name:"nasa",
     email:"email@gmail.com",
     password:"3321",
-    isAdmin:true
+    isAdmin:"44197eb2-1ab6-4f98-a949-e5dacf85ddcd"
   },  
 ]
 

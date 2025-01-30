@@ -10,33 +10,36 @@ export class UserService {
 
   getOne(id:string): IUser {
     const data = this.users.find((i) => i.id == +id)
-    if(!data) {
-      throw new Error('not found')
-    }
+    if(!data) throw new Error('not found')
+
     return data
   }
 
-
-  deleteUser(id:string, adminId:string): string {
+  createUser(data:IUser):string {
     try {
-      const admin = this.users.find((i) => i.id == +adminId && i.isAdmin)
-      if(!admin) {
-        throw new Error("This user cant't do this")
+      if(this.users.find((i) => i.id == data.id )) throw new Error(`user already exists ${JSON.stringify(data)}`)
+      if(this.users.find((i) =>i.email == data.email )) throw new Error(`a user with this email already exists ${JSON.stringify(data)}`)
+      
+      this.users = [...this.users, data]
+      console.log(this.users);
 
-        } else {
-          const user = this.users.find((i) => i.id == +id)
-          if(!user) {
-            
-            throw new Error("This user cant't do this")
-            
-          } else {
-            this.users = [...users.filter((i) => i.id != +user?.id)]
-            return `user with id ${user?.id} excluded by ${admin.name}`
-          }
-      }  
-
+      return'user created'
+      
     } catch (error) {
+      console.log(error);
       return `${error}`
     }
   }
+
+  updateUser(data:IUser):string{
+    let user = this.users.find((i) => i.id == data.id)
+    if(!user) throw new Error('not found')
+    this.users[this.users.indexOf(user)] = data
+    
+    console.log(this.users);
+    
+    return'updated'
+  }
+
+
 }

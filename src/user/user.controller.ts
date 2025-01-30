@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IUser, users } from 'src/user/mock';
 import { UserService } from './user.service';
 
@@ -17,6 +17,16 @@ export class UserController {
 
   @Delete("/delete")
   deleteUser(@Body() data:{id:string, adminId:string}):string {
-    return this.userService.deleteUser(data.id, data.adminId)
+    return "Delete is permited only  through the database"
+  }
+  
+  @Post("/post")
+  createUser(@Body() data:IUser):string {
+    return this.userService.createUser(data)
+  }
+
+  @Put("/put")
+  updateUser(@Body() data:IUser):string {
+    return this.userService.updateUser(data)
   }
 }
