@@ -1,5 +1,3 @@
-import { randomUUID } from "node:crypto"
-
 interface IUser {
   id:number
   name:string

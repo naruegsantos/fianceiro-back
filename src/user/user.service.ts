@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUser, users } from 'src/user/mock';
+import { IUser, users } from './mock';
 
 @Injectable()
 export class UserService {
@@ -35,9 +35,7 @@ export class UserService {
     let user = this.users.find((i) => i.id == data.id)
     if(!user) throw new Error('not found')
     this.users[this.users.indexOf(user)] = data
-    
     console.log(this.users);
-    
     return'updated'
   }
 
