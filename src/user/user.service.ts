@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { IUser, users } from './mock';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
+  constructor(private readonly PrismaService: PrismaService) { }
+
   private users: IUser[] = users;
   getAll(): IUser[] {
-    return this.users
+    return PrismaService
   }
 
   getOne(id:string): IUser {
