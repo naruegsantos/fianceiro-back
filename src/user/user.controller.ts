@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser } from './mock';
+import { IUser } from './types';
+import { Prisma, User } from '@prisma/client';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
   @Get()
-  getUsers(): IUser[] {
+  getUsers():Prisma.PrismaPromise<User[]> {
     return this.userService.getAll()
   }
 
@@ -21,7 +22,7 @@ export class UserController {
   }
 
   @Post("/post")
-  createUser(@Body() data: IUser): string {
+  createUser(@Body() data: User): string | Promise<User> {
     return this.userService.createUser(data)
   }
 

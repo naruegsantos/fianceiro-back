@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,6 +5,33 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       Int        @id @default(autoincrement())
+  label    String
+  userId   Int
+  category categories
+  user     User       @relation(fields: [userId], references: [id])
+  records  Record[]
+}
+
+model Record {
+  id        Int        @id @default(autoincrement())
+  label     String
+  accountId Int
+  category  categories
+  date      String
+  account   Account    @relation(fields: [accountId], references: [id])
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String
+  email      String      @unique
+  password   String
+  permission permissions
+  accounts   Account[]
 }
 
 enum categories {
@@ -18,34 +44,4 @@ enum permissions {
   ADMIN
   OPERATOR
   GUEST
-}
-
-
-
-model User {
-  id         Int        @id @default(autoincrement())
-  name       String
-  email      String     @unique
-  password   String
-  permission permissions
-  accounts Account[]
-}
-
-model Account {
-  id         Int        @id @default(autoincrement())
-  label      String     
-  userId  Int
-  user User @relation(fields: [userId], references: [id])
-  category categories
-  records Record[]
-}
-
-
-model Record {
-  id         Int        @id @default(autoincrement())
-  label String
-  accountId Int
-  account Account @relation(fields: [accountId], references: [id])
-  category categories
-  date String 
 }
