@@ -7,27 +7,27 @@ import { Prisma, User } from '@prisma/client';
 export class UserService {
   constructor(private prismaClient: PrismaService) {} 
 
-  private users: IUser[] = users;
   getAll(){
     return this.prismaClient.user.findMany()
   }
 
-  getOne(id:string): IUser {
-    const data = this.users.find((i) => i.id == +id)
-    if(!data) throw new Error('not found')
-
-    return data
+  getOne(uniqueInput:Prisma.UserWhereUniqueInput) {
+    return this.prismaClient.user.findUnique( {
+      where: uniqueInput
+    })
   }
 
+  async createUser(data:Prisma.UserCreateInput):Promise<string| Promise<User>> {
+    let userAlreadyExists:boolean = await this.prismaClient.user.findUnique( {
+      where: {
+        email: data.email
+      }
+    }) != null
 
-
-
-  createUser(data:Prisma.UserCreateInput):string | Promise<User> {
     try {
-      if(this.users.find((i) =>i.email == data.email )) throw new Error(`a user with this email already exists ${JSON.stringify(data)}`)
+      if(userAlreadyExists) throw new Error(`User with email \n ${data.email} already exists`)
       let newUser = this.prismaClient.user.create({data})
       console.log(newUser);
-      
       return newUser
       
     } catch (error) {
@@ -36,13 +36,17 @@ export class UserService {
     }
   }
 
-  updateUser(data:IUser):string{
-    let user = this.users.find((i) => i.id == data.id)
-    if(!user) throw new Error('not found')
-    this.users[this.users.indexOf(user)] = data
-    console.log(this.users);
-    return'updated'
+  async updateUser(params: {
+    where: {id:number}
+    data: Prisma.UserUpdateInput
+  }): Promise<User> {
+    const { data, where } = params
+    return this.prismaClient.user.update({
+      data,
+      where
+    });
   }
+
 
 
 }

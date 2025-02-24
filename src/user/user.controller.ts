@@ -11,9 +11,9 @@ export class UserController {
     return this.userService.getAll()
   }
 
-  @Get(":id")
-  getUserById(@Param('id') id: string): IUser {
-    return this.userService.getOne(id)
+  @Get("/:id")
+  getUserById(@Param('id') id:string) {
+    if(id) return this.userService.getOne({id: Number(id)})
   }
 
   @Delete("/delete")
@@ -22,12 +22,12 @@ export class UserController {
   }
 
   @Post("/post")
-  createUser(@Body() data: User): string | Promise<User> {
+  createUser(@Body() data: User): Promise<string | Promise<User>> {
     return this.userService.createUser(data)
   }
 
   @Put("/put")
-  updateUser(@Body() data: IUser): string {
+  updateUser(@Body() data: {data:Prisma.UserUpdateInput, where:{id:number}}) {
     return this.userService.updateUser(data)
   }
 }
