@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres", "relationJoins"]
+} 
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       Int        @id @default(autoincrement())
+  label    String
+  userId   Int
+  category categories
+  user     User       @relation(fields: [userId], references: [id])
+  records  Record[]
+}
+
+model Record {
+  id        Int        @id @default(autoincrement())
+  label     String
+  accountId Int
+  category  categories
+  date      String
+  account   Account    @relation(fields: [accountId], references: [id])
+  value Float @default(0.0)
+  description String?
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String
+  email      String      @unique
+  password   String
+  permission permissions
+  accounts   Account[]
+}
+
+enum categories {
+  REVENUE
+  EXPENSE
+  TRANSFERENCE
+  ASSET
+}
+
+enum permissions {
+  ADMIN
+  OPERATOR
+  GUEST
+}

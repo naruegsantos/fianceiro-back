@@ -1,29 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { IUser, users } from './mock';
+import { Inject, Injectable } from '@nestjs/common';
+import { IUser, users } from './types';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private users: IUser[] = users;
-  getAll(): IUser[] {
-    return this.users
+  constructor(private prismaClient: PrismaService) {} 
+
+  getAll(){
+    return this.prismaClient.user.findMany()
   }
 
-  getOne(id:string): IUser {
-    const data = this.users.find((i) => i.id == +id)
-    if(!data) throw new Error('not found')
-
-    return data
+  getOne(uniqueInput:Prisma.UserWhereUniqueInput) {
+    return this.prismaClient.user.findUnique( {
+      where: uniqueInput
+    })
   }
 
-  createUser(data:IUser):string {
+  async createUser(data:Prisma.UserCreateInput):Promise<string| Promise<User>> {
+    let userAlreadyExists:boolean = await this.prismaClient.user.findUnique( {
+      where: {
+        email: data.email
+      }
+    }) != null
+
     try {
-      if(this.users.find((i) => i.id == data.id )) throw new Error(`user already exists ${JSON.stringify(data)}`)
-      if(this.users.find((i) =>i.email == data.email )) throw new Error(`a user with this email already exists ${JSON.stringify(data)}`)
-      
-      this.users = [...this.users, data]
-      console.log(this.users);
-
-      return'user created'
+      if(userAlreadyExists) throw new Error(`User with email \n ${data.email} already exists`)
+      let newUser = this.prismaClient.user.create({data})
+      console.log(newUser);
+      return newUser
       
     } catch (error) {
       console.log(error);
@@ -31,13 +36,22 @@ export class UserService {
     }
   }
 
-  updateUser(data:IUser):string{
-    let user = this.users.find((i) => i.id == data.id)
-    if(!user) throw new Error('not found')
-    this.users[this.users.indexOf(user)] = data
-    console.log(this.users);
-    return'updated'
+  async updateUser(params: {
+    where: {
+        id: number
+    }
+    data: Prisma.UserUpdateInput
+  }): Promise < User > {
+      const {
+          data,
+          where
+      } = params
+      return this.prismaClient.user.update({
+          data,
+          where
+      });
   }
+
 
 
 }
