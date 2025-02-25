@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser } from './types';
 import { Prisma, User } from '@prisma/client';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('/user')
 export class UserController {
@@ -13,7 +13,7 @@ export class UserController {
 
   @Get("/:id")
   getUserById(@Param('id') id:string) {
-    if(id) return this.userService.getOne({id: Number(id)})
+    return this.userService.getOne({id: Number(id)})
   }
 
   @Delete("/delete")
@@ -22,7 +22,7 @@ export class UserController {
   }
 
   @Post("/post")
-  createUser(@Body() data: User): Promise<string | Promise<User>> {
+  createUser(@Body() data:Prisma.UserCreateInput): Promise<string | Promise<User>> {
     return this.userService.createUser(data)
   }
 

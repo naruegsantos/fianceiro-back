@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-}
+  previewFeatures = ["fullTextSearchPostgres", "relationJoins"]
+} 
 
 datasource db {
   provider = "postgresql"
@@ -23,6 +24,8 @@ model Record {
   category  categories
   date      String
   account   Account    @relation(fields: [accountId], references: [id])
+  value Float @default(0.0)
+  description String?
 }
 
 model User {
@@ -38,6 +41,7 @@ enum categories {
   REVENUE
   EXPENSE
   TRANSFERENCE
+  ASSET
 }
 
 enum permissions {
