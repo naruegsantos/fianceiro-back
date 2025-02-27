@@ -28,7 +28,6 @@
     "@prisma/client": "^6.4.1",
     "cli": "^1.0.1",
     "dotenv": "^16.4.7",
-    "mau": "^0.3.3",
     "nest": "^0.1.6",
     "prisma": "^6.4.1",
     "reflect-metadata": "^0.2.2",
