@@ -10,7 +10,7 @@ import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [UserModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), AccountModule, RecordModule, PrismaModule],
+  }), AccountModule, RecordModule],
   controllers: [AppController],
   providers: [AppService],
 })
