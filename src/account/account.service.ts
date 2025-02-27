@@ -60,13 +60,13 @@ export class AccountService {
         credits: {
           select: {
             value: true,
-            category: true
+            recordCategory: true
           },
         },
         debits: {
           select: {
             value: true,
-            category: true
+            recordCategory: true
           },
         },
       }
