@@ -18,9 +18,9 @@ export class AccountController {
     return this.accountService.findAll();
   }
 
-  @Get("/search")
-  search(@Body() params: Prisma.AccountWhereUniqueInput) {
-    return this.accountService.search(params);
+  @Get('find/:id')
+  findOne(@Param('id') id: string) {
+    return this.accountService.findOne({id:+id});
   }
 
   @Patch('/patch')
@@ -28,23 +28,26 @@ export class AccountController {
     return this.accountService.update(data);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.accountService.remove({id:+id});
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne({id:+id});
+
+
+  @Get("/search")
+  search(@Body() params: Prisma.AccountWhereUniqueInput) {
+    return this.accountService.search(params);
   }
 
-
+  @Post("/post/bulk")
+  createMany(@Body() data: Prisma.AccountCreateManyInput | Prisma.AccountCreateManyInput[]) {
+    return this.accountService.createMany(data);
+  }
 
   @Get(':id/total')
   getTotalValue(@Param('id') id: string) {
-    let values = this.accountService.calculateTotalValue({id:+id});
-    return values
+    return  this.accountService.calculateTotalValue({id:+id});
   }
 
-  
 }

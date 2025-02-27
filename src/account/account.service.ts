@@ -10,6 +10,10 @@ export class AccountService {
     return this.prismaClient.account.create({data})
   }
 
+  createMany(data: Prisma.AccountCreateManyInput[] | Prisma.AccountCreateManyInput) {
+    return this.prismaClient.account.createManyAndReturn({data})
+  }
+
   findAll() {
     return this.prismaClient.account.findMany();
   }
@@ -53,7 +57,13 @@ export class AccountService {
       relationLoadStrategy: "join",
       where:uniqueInput,
       select: {
-        records: {
+        credits: {
+          select: {
+            value: true,
+            category: true
+          },
+        },
+        debits: {
           select: {
             value: true,
             category: true
@@ -62,11 +72,9 @@ export class AccountService {
       }
     })
 
-    // let total = 0
-    // values?.records.map((i) => {
-    //   i.category == ""
-    // })
+    let credits = values?.credits.reduce((x, y) => x + y.value, 0) || 0
+    let debits = values?.debits.reduce((x, y) => x + y.value, 0) || 0
 
-    return values?.records.reduce((x,y) => x + y.value, 0)
+    return  credits - debits
   }
 }

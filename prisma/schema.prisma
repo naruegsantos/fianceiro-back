@@ -12,19 +12,22 @@ model Account {
   id       Int        @id @default(autoincrement())
   label    String
   userId   Int
-  category categories
+  accountCategory categories
   user     User       @relation(fields: [userId], references: [id])
-  records  Record[]
+  debits Record[] @relation("cameFrom")
+  credits Record[] @relation("wentTo")
 }
 
 model Record {
   id        Int        @id @default(autoincrement())
   label     String
-  accountId Int
-  category  categories
+  cameFromId Int
+  wentToId Int
+  recordCategory  categories
   date      String
-  account   Account    @relation(fields: [accountId], references: [id])
-  value Float @default(0.0)
+  cameFrom  Account    @relation(name: "cameFrom",fields: [cameFromId], references: [id])
+  wentTo  Account    @relation(name: "wentTo", fields: [wentToId], references: [id])
+  value Float @default(0.0) // um record pode ter valr 0?
   description String?
 }
 
