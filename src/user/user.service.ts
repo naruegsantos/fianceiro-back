@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { IUser, users } from './types';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 
@@ -11,20 +10,20 @@ export class UserService {
     return this.prismaClient.user.findMany()
   }
 
-  getOne(uniqueInput:Prisma.UserWhereUniqueInput) {
-    return this.prismaClient.user.findUnique( {
+  findOne(uniqueInput:Prisma.UserWhereInput) {
+    return this.prismaClient.user.findFirst( {
       where: uniqueInput
     })
   }
 
   async createUser(data:Prisma.UserCreateInput):Promise<string| Promise<User>> {
-    let userAlreadyExists:boolean = await this.prismaClient.user.findUnique( {
-      where: {
-        email: data.email
-      }
-    }) != null
-
     try {
+      let userAlreadyExists:boolean = await this.prismaClient.user.findUnique( {
+        where: {
+          email: data.email
+        }
+      }) != null
+  
       if(userAlreadyExists) throw new Error(`User with email \n ${data.email} already exists`)
       let newUser = this.prismaClient.user.create({data})
       console.log(newUser);
@@ -52,6 +51,26 @@ export class UserService {
       });
   }
 
+  async getUserData(id:{id:number}) {
+    try {
+      let res = await this.prismaClient.user.findUnique({
+        relationLoadStrategy: 'join',
+
+        where:id,
+        include: {
+          accounts: {
+            include: {
+              credits:true,
+              debits:true
+            }
+          },
+        }
+      })
+      return res
+    } catch (error) {
+      
+    }
+  }
 
 
 }

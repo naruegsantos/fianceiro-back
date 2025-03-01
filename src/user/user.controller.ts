@@ -12,7 +12,7 @@ export class UserController {
 
   @Get("/:id")
   getUserById(@Param('id') id:string) {
-    return this.userService.getOne({id: Number(id)})
+    return this.userService.findOne({id: Number(id)})
   }
 
   @Delete("/delete")
@@ -29,4 +29,11 @@ export class UserController {
   updateUser(@Body() data: {data:Prisma.UserUpdateInput, where:{id:number}}) {
     return this.userService.updateUser(data)
   }
+
+
+  @Get(":id/data")
+  getUserData(@Param('id') id:string) {
+    return this.userService.getUserData({id:+id})
+  }
+
 }

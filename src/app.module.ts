@@ -6,11 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import { AccountModule } from './account/account.module';
 import { RecordModule } from './record/record.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [UserModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), AccountModule, RecordModule, PrismaModule],
+  }), AccountModule, RecordModule, PrismaModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
