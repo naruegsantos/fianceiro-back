@@ -12,22 +12,22 @@ model Account {
   id       Int        @id @default(autoincrement())
   label    String
   userId   Int
-  accountCategory categories
+  accountCategory accountCategories
   user     User       @relation(fields: [userId], references: [id])
-  debits Record[] @relation("cameFrom")
-  credits Record[] @relation("wentTo")
+  debits   Record[] @relation("cameFrom")
+  credits  Record[] @relation("wentTo")
 }
 
 model Record {
   id        Int        @id @default(autoincrement())
   label     String
   cameFromId Int
-  wentToId Int
-  recordCategory  categories
+  wentToId  Int
+  recordCategory  recordCategories
   date      String
   cameFrom  Account    @relation(name: "cameFrom",fields: [cameFromId], references: [id])
-  wentTo  Account    @relation(name: "wentTo", fields: [wentToId], references: [id])
-  value Float @default(0.0) // um record pode ter valr 0?
+  wentTo    Account    @relation(name: "wentTo", fields: [wentToId], references: [id])
+  value     Float @default(0.0) // um record pode ter valr 0?
   description String?
 }
 
@@ -36,18 +36,23 @@ model User {
   name       String
   email      String      @unique
   password   String
-  permission permissions
+  role       roles
   accounts   Account[]
 }
 
-enum categories {
+enum recordCategories {
   REVENUE
   EXPENSE
   TRANSFERENCE
+}
+
+enum accountCategories {
+  REVENUE
+  EXPENSE
   ASSET
 }
 
-enum permissions {
+enum roles {
   ADMIN
   OPERATOR
   GUEST

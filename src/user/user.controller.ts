@@ -25,11 +25,12 @@ export class UserController {
     return this.userService.createUser(data)
   }
 
-  @Put("/put")
+  @Post("/put")
   updateUser(@Body() data: {data:Prisma.UserUpdateInput, where:{id:number}}) {
-    return this.userService.updateUser(data)
+    console.log(data);
+    
+    // return this.userService.updateUser(data)
   }
-
 
   @Get(":id/data")
   getUserData(@Param('id') id:string) {

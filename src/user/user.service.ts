@@ -12,7 +12,7 @@ export class UserService {
 
   findOne(uniqueInput:Prisma.UserWhereInput) {
     return this.prismaClient.user.findFirst( {
-      where: uniqueInput
+      where:  uniqueInput
     })
   }
 
@@ -25,7 +25,7 @@ export class UserService {
       }) != null
   
       if(userAlreadyExists) throw new Error(`User with email \n ${data.email} already exists`)
-      let newUser = this.prismaClient.user.create({data})
+      let newUser = await this.prismaClient.user.create({data})
       console.log(newUser);
       return newUser
       
@@ -55,7 +55,6 @@ export class UserService {
     try {
       let res = await this.prismaClient.user.findUnique({
         relationLoadStrategy: 'join',
-
         where:id,
         include: {
           accounts: {

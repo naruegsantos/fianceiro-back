@@ -6,3 +6,5 @@ export class Record {
   date:string;
   description?: string | null;
 }
+
+
